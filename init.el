@@ -195,10 +195,10 @@
 
 
 ;; FONT -----------------------
-(defvar jd/default-font-size 100)
-(set-face-attribute 'default nil :font "Agave Nerd Font" :weight 'light :height jd/default-font-size)
-(set-face-attribute 'fixed-pitch nil :font "Agave Nerd Font" :weight 'light :height jd/default-font-size)
-(set-face-attribute 'variable-pitch nil :font "Agave Nerd Font" :height jd/default-font-size)
+(defvar jd/default-font-size 95)
+(set-face-attribute 'default nil :font "Iosevka Aile" :weight 'light :height jd/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "Iosevka Aile" :weight 'light :height jd/default-font-size)
+(set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
 
 ;; Emojis in buffers
 (use-package emojify
@@ -276,6 +276,7 @@
   "op"  '(org-present :which-key "org-mode presentation")
   "ot"  '(vterm :which-key "launch vterm")
   "ou"  '(org-roam-db-sync :which-key "org-roam db sync")
+  "oa"  '(org-agenda :which-key "org agenda")
   
   "t" '(:ignore t :which-key "toggles")
   "tw" 'whitespace-mode
@@ -516,7 +517,7 @@ folder, otherwise delete a word"
 
 ;; Set Margins for Modes
 (defun jd/org-mode-visual-fill ()
-  (setq visual-fill-column-width 120
+  (setq visual-fill-column-width 90
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
@@ -620,7 +621,7 @@ folder, otherwise delete a word"
 ;; Org Configuration
 
 ;; TODO: Mode this to another section
-(setq-default fill-column 110)
+(setq-default fill-column 120)
 
 ;; Turn on indentation and auto-fill mode for Org files
 (defun jd/org-mode-setup ()
@@ -646,9 +647,66 @@ folder, otherwise delete a word"
         org-src-preserve-indentation nil
         org-startup-folded 'overview
         org-cycle-separator-lines 2)
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  (setq org-agenda-start-on-weekday 0)
   (setq org-agenda-files
         '("~/notes/agenda"))
-  (setq org-agenda-start-on-weekday 0)
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "STRT(s)" "NEXT(n)" "|" "DONE(d!)")
+          (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(r)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+
+  ;; Configure custom agenda views
+  (setq org-agenda-custom-commands
+   '(("d" "Dashboard"
+     ((agenda "" ((org-deadline-warning-days 7)))
+      (todo "TODO"
+        ((org-agenda-overriding-header "Not Started")))
+      (todo "NEXT"
+        ((org-agenda-overriding-header "Next Tasks")))
+      (todo "STRT" ((org-agenda-overriding-header "Work in Progress")))))
+
+    ("n" "Next Tasks"
+     ((todo "NEXT"
+        ((org-agenda-overriding-header "Next Tasks")))))
+
+    ("W" "Work Tasks" tags-todo "+work-email")
+
+    ;; Low-effort next actions
+    ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+     ((org-agenda-overriding-header "Low Effort Tasks")
+      (org-agenda-max-todos 20)
+      (org-agenda-files org-agenda-files)))
+
+    ("w" "Workflow Status"
+     ((todo "WAIT"
+            ((org-agenda-overriding-header "Waiting on External")
+             (org-agenda-files org-agenda-files)))
+      (todo "REVIEW"
+            ((org-agenda-overriding-header "In Review")
+             (org-agenda-files org-agenda-files)))
+      (todo "PLAN"
+            ((org-agenda-overriding-header "In Planning")
+             (org-agenda-todo-list-sublevels nil)
+             (org-agenda-files org-agenda-files)))
+      (todo "BACKLOG"
+            ((org-agenda-overriding-header "Project Backlog")
+             (org-agenda-todo-list-sublevels nil)
+             (org-agenda-files org-agenda-files)))
+      (todo "READY"
+            ((org-agenda-overriding-header "Ready for Work")
+             (org-agenda-files org-agenda-files)))
+      (todo "ACTIVE"
+            ((org-agenda-overriding-header "Active Projects")
+             (org-agenda-files org-agenda-files)))
+      (todo "COMPLETED"
+            ((org-agenda-overriding-header "Completed Projects")
+             (org-agenda-files org-agenda-files)))
+      (todo "CANC"
+            ((org-agenda-overriding-header "Cancelled Projects")
+             (org-agenda-files org-agenda-files)))))))
+
 
   (setq org-modules
         '(org-crypt
@@ -674,24 +732,24 @@ folder, otherwise delete a word"
   (push '("conf-unix" . conf-unix) org-src-lang-modes)
 
   ;; Fonts and Bullets
-  (use-package org-superstar
-    :after org
-    :hook (org-mode . org-superstar-mode)
-    :custom
-    (org-superstar-remove-leading-stars t)
-    (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
+  ;; (use-package org-superstar
+  ;;   :after org
+  ;;   :hook (org-mode . org-superstar-mode)
+  ;;   :custom
+  ;;   (org-superstar-remove-leading-stars t)
+  ;;   (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
 
   ;; Increase the size of various headings
   (set-face-attribute 'org-document-title nil :font "JetBrains Mono" :weight 'bold :height 1.0)
-  (dolist (face '((org-level-1 . 1.2)
-                  (org-level-2 . 1.2)
-                  (org-level-3 . 1.2)
-                  (org-level-4 . 1.2)
-                  (org-level-5 . 1.2)
-                  (org-level-6 . 1.2)
-                  (org-level-7 . 1.2)
-                  (org-level-8 . 1.2)))
-    (set-face-attribute (car face) nil :font "Agave Nerd Font" :weight 'medium :height (cdr face)))
+  (dolist (face '((org-level-1 . 1.0)
+                  (org-level-2 . 1.0)
+                  (org-level-3 . 1.0)
+                  (org-level-4 . 1.0)
+                  (org-level-5 . 1.0)
+                  (org-level-6 . 1.0)
+                  (org-level-7 . 1.0)
+                  (org-level-8 . 1.0)))
+    (set-face-attribute (car face) nil :font "Iosevka Aile" :weight 'medium :height (cdr face)))
 
   ;; Make sure org-indent face is available
   (require 'org-indent)
