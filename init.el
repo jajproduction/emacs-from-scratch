@@ -141,8 +141,8 @@
 (setq use-dialog-box nil) ;; Disable dialog boxes since they weren't working in Mac OSX
 
 ;; Set frame transparency and windows
-(set-frame-parameter (selected-frame) 'alpha '(80 . 80))
-(add-to-list 'default-frame-alist '(alpha . (80 . 80)))
+;; (set-frame-parameter (selected-frame) 'alpha '(80 . 80))
+;; (add-to-list 'default-frame-alist '(alpha . (80 . 80)))
 
 ;; NOTE: Remove the comments below to set emacs to fullscreen
 (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
