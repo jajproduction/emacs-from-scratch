@@ -195,9 +195,9 @@
 
 
 ;; FONT -----------------------
-(defvar jd/default-font-size 95)
-(set-face-attribute 'default nil :font "Iosevka Aile" :weight 'light :height jd/default-font-size)
-(set-face-attribute 'fixed-pitch nil :font "Iosevka Aile" :weight 'light :height jd/default-font-size)
+(defvar jd/default-font-size 100)
+(set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height jd/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height jd/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
 
 ;; Emojis in buffers
@@ -517,7 +517,7 @@ folder, otherwise delete a word"
 
 ;; Set Margins for Modes
 (defun jd/org-mode-visual-fill ()
-  (setq visual-fill-column-width 90
+  (setq visual-fill-column-width 100
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
