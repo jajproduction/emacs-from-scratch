@@ -195,9 +195,9 @@
 
 
 ;; FONT -----------------------
-(defvar jd/default-font-size 100)
-(set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height jd/default-font-size)
-(set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height jd/default-font-size)
+(defvar jd/default-font-size 105)
+(set-face-attribute 'default nil :font "DejaVu Sans Mono" :weight 'light :height jd/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "DejaVu Sans Mono" :weight 'light :height jd/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
 
 ;; Emojis in buffers
