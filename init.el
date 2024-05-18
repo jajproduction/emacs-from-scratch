@@ -195,9 +195,9 @@
 
 
 ;; FONT -----------------------
-(defvar jd/default-font-size 105)
-(set-face-attribute 'default nil :font "DejaVu Sans Mono" :weight 'light :height jd/default-font-size)
-(set-face-attribute 'fixed-pitch nil :font "DejaVu Sans Mono" :weight 'light :height jd/default-font-size)
+(defvar jd/default-font-size 95)
+(set-face-attribute 'default nil :font "FiraCode Nerd Font" :weight 'light :height jd/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font" :weight 'light :height jd/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
 
 ;; Emojis in buffers
@@ -652,7 +652,7 @@ folder, otherwise delete a word"
   (setq org-log-into-drawer t)
   (setq org-agenda-start-on-weekday 0)
   (setq org-agenda-files
-        '("~/notes/agenda"))
+        '("~/vault/planner"))
   (setq org-todo-keywords
         '((sequence "TODO(t)" "STRT(s)" "NEXT(n)" "|" "DONE(d!)")
           (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(r)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
@@ -792,7 +792,7 @@ folder, otherwise delete a word"
   ;; Searching
   (defun jd/search-org-files ()
     (interactive)
-    (counsel-rg "" "~/notes" nil "Search Notes: "))
+    (counsel-rg "" "~/vault" nil "Search Notes: "))
 
   ;; Bindings
   (use-package evil-org
@@ -850,7 +850,7 @@ folder, otherwise delete a word"
 (use-package org-roam
   :straight t
   :custom
-  (org-roam-directory "~/notes")
+  (org-roam-directory "~/vault")
   (org-roam-completion-everywhere t)
   (org-roam-capture-templates
    '(("d" "default" plain
@@ -889,7 +889,7 @@ folder, otherwise delete a word"
 ;; Deft
 (use-package deft
   :commands (deft)
-  :config (setq deft-directory "~/notes"
+  :config (setq deft-directory "~/vault"
                 deft-recursive t
                 deft-extensions '("md" "org")))
 
