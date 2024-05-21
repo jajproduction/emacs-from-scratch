@@ -181,7 +181,7 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t
 	      doom-themes-enable-italic t)
-  (load-theme 'doom-one t)
+  (load-theme 'doom-tokyo-night t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -195,7 +195,7 @@
 
 
 ;; FONT -----------------------
-(defvar jd/default-font-size 95)
+(defvar jd/default-font-size 100)
 (set-face-attribute 'default nil :font "FiraCode Nerd Font" :weight 'light :height jd/default-font-size)
 (set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font" :weight 'light :height jd/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
@@ -517,7 +517,7 @@ folder, otherwise delete a word"
 
 ;; Set Margins for Modes
 (defun jd/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
+  (setq visual-fill-column-width 115
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
@@ -732,12 +732,12 @@ folder, otherwise delete a word"
   (push '("conf-unix" . conf-unix) org-src-lang-modes)
 
   ;; Fonts and Bullets
-  ;; (use-package org-superstar
-  ;;   :after org
-  ;;   :hook (org-mode . org-superstar-mode)
-  ;;   :custom
-  ;;   (org-superstar-remove-leading-stars t)
-  ;;   (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
+  (use-package org-superstar
+    :after org
+    :hook (org-mode . org-superstar-mode)
+    :custom
+    (org-superstar-remove-leading-stars t)
+    (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
 
   ;; Increase the size of various headings
   (set-face-attribute 'org-document-title nil :font "JetBrains Mono" :weight 'bold :height 1.0)
@@ -868,7 +868,7 @@ folder, otherwise delete a word"
      ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
       :unnarrowed t)))
-  (org-roam-dailies-directory "letters-to-myself/")
+  (org-roam-dailies-directory "01-commonplace-books/contemplatio/")
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "* %<%I:%M %p>: %?"
       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n\n"))))
