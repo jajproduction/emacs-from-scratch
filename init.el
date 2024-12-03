@@ -181,7 +181,7 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t
 	      doom-themes-enable-italic t)
-  (load-theme 'doom-tokyo-night t)
+  (load-theme 'doom-one t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -195,10 +195,10 @@
 
 
 ;; FONT -----------------------
-(defvar jd/default-font-size 100)
-(set-face-attribute 'default nil :font "FiraCode Nerd Font" :weight 'light :height jd/default-font-size)
-(set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font" :weight 'light :height jd/default-font-size)
-(set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
+(defvar jd/default-font-size 85)
+(set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height jd/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height jd/default-font-size)
+(set-face-attribute 'variable-pitch nil :font "Ubuntu" :height jd/default-font-size)
 
 ;; Emojis in buffers
 (use-package emojify
@@ -517,7 +517,7 @@ folder, otherwise delete a word"
 
 ;; Set Margins for Modes
 (defun jd/org-mode-visual-fill ()
-  (setq visual-fill-column-width 115
+  (setq visual-fill-column-width 145
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
@@ -621,7 +621,7 @@ folder, otherwise delete a word"
 ;; Org Configuration
 
 ;; TODO: Mode this to another section
-(setq-default fill-column 120)
+(setq-default fill-column 125)
 
 ;; Turn on indentation and auto-fill mode for Org files
 (defun jd/org-mode-setup ()
@@ -631,6 +631,8 @@ folder, otherwise delete a word"
   (visual-line-mode 1)
   (setq evil-auto-indent nil)
   (diminish org-indent-mode))
+
+(global-set-key (kbd "C-c o") (lambda () (interactive) (find-file "~/jot/agenda.org")))
 
 (use-package org
   :defer t
@@ -652,9 +654,9 @@ folder, otherwise delete a word"
   (setq org-log-into-drawer t)
   (setq org-agenda-start-on-weekday 0)
   (setq org-agenda-files
-        '("~/vault/planner"))
+        '("~/jot/agenda.org"))
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "STRT(s)" "NEXT(n)" "|" "DONE(d!)")
+        '((sequence "TODO(t)" "START(s)" "NEXT(n)" "|" "DONE(d!)")
           (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(r)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
   ;; Configure custom agenda views
@@ -665,7 +667,7 @@ folder, otherwise delete a word"
         ((org-agenda-overriding-header "Not Started")))
       (todo "NEXT"
         ((org-agenda-overriding-header "Next Tasks")))
-      (todo "STRT" ((org-agenda-overriding-header "Work in Progress")))))
+      (todo "START" ((org-agenda-overriding-header "Work in Progress")))))
 
     ("n" "Next Tasks"
      ((todo "NEXT"
@@ -749,7 +751,7 @@ folder, otherwise delete a word"
                   (org-level-6 . 1.0)
                   (org-level-7 . 1.0)
                   (org-level-8 . 1.0)))
-    (set-face-attribute (car face) nil :font "Iosevka Aile" :weight 'medium :height (cdr face)))
+    (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'medium :height (cdr face)))
 
   ;; Make sure org-indent face is available
   (require 'org-indent)
@@ -792,7 +794,7 @@ folder, otherwise delete a word"
   ;; Searching
   (defun jd/search-org-files ()
     (interactive)
-    (counsel-rg "" "~/vault" nil "Search Notes: "))
+    (counsel-rg "" "~/jot" nil "Search Notes: "))
 
   ;; Bindings
   (use-package evil-org
@@ -850,25 +852,25 @@ folder, otherwise delete a word"
 (use-package org-roam
   :straight t
   :custom
-  (org-roam-directory "~/vault")
+  (org-roam-directory "~/jot/org")
   (org-roam-completion-everywhere t)
   (org-roam-capture-templates
    '(("d" "default" plain
       "%?"
-      :if-new (file+head "${slug}.org" "#+title: ${title}\n")
+      :if-new (file+head "${slug}.org" "#+title: ${title}\n#+author: Jaj Dollesin\n\n")
       :unnarrowed t)
      ("l" "programming language" plain
       "* Get Started\n\n- Topic: %?\n- Language: \n\n"
       :if-new (file+head "${slug}.org" "#+title: ${title}\n")
       :unnarrowed t)
      ("b" "book" plain
-      "\n#+author: Jom Dollesin\n\n"
+      "\n#+author: Jaj Dollesin\n\n"
       :if-new (file+head "${slug}.org" "#+title: ${title}\n")
       :unnarrowed t)
      ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
       :unnarrowed t)))
-  (org-roam-dailies-directory "01-commonplace-books/contemplatio/")
+  (org-roam-dailies-directory "~/jot/life/")
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "* %<%I:%M %p>: %?"
       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n\n"))))
@@ -889,7 +891,7 @@ folder, otherwise delete a word"
 ;; Deft
 (use-package deft
   :commands (deft)
-  :config (setq deft-directory "~/vault"
+  :config (setq deft-directory "~/jot"
                 deft-recursive t
                 deft-extensions '("md" "org")))
 
