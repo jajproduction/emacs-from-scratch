@@ -266,8 +266,10 @@
   "ii"  '(org-id-get-create :which-key "org ID")
 
   "g"   '(:ignore t :which-key "magit")
-  "gc"  '(magit-clone :which-key "git clone")
+  "gc"  '(magit-commit :which-key "commit")
   "gg"  '(magit :which-key "show status")
+  "gp"  '(magit-pull-from-upstream :which-key "pull")
+  "gP"  '(magit-push-current-to-upstream :which-key "push")
   "gi"  '(magit-init :which-key "git init")
 
   "oi"  '(org-toggle-inline-images :which-key "display images in org-mode")
