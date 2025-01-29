@@ -145,12 +145,12 @@
 ;; (add-to-list 'default-frame-alist '(alpha . (80 . 80)))
 
 ;; NOTE: Remove the comments below to set emacs to fullscreen
-(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; NOTE: Add comment (;;) below to use the fullscreen above
-;; (add-to-list 'default-frame-alist '(width  . 90))
-;; (add-to-list 'default-frame-alist '(height . 44))
+(add-to-list 'default-frame-alist '(width  . 90))
+(add-to-list 'default-frame-alist '(height . 44))
 
 
 ;; Enable line numbers and customize their format
@@ -196,9 +196,9 @@
 
 ;; FONT -----------------------
 (defvar jd/default-font-size 85)
-(set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height jd/default-font-size)
-(set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height jd/default-font-size)
-(set-face-attribute 'variable-pitch nil :font "Ubuntu" :height jd/default-font-size)
+(set-face-attribute 'default nil :font "FiraCode Nerd Font" :weight 'medium :height jd/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font" :weight 'medium :height jd/default-font-size)
+(set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
 
 ;; Emojis in buffers
 (use-package emojify
@@ -231,7 +231,7 @@
   (doom-modeline-github nil)
   (doom-modeline-minor-modes t)
   (doom-modeline-persp-name nil)
-  (doom-modeline-buffer-file-name-style 'truncate-except-project)
+  ;;(doom-modeline-buffer-file-name-style 'truncate-except-project)
   (doom-modeline-major-mode-icon nil)
   :custom-face
   (mode-line ((t (:height 0.85))))
@@ -634,7 +634,7 @@ folder, otherwise delete a word"
   (setq evil-auto-indent nil)
   (diminish org-indent-mode))
 
-(global-set-key (kbd "C-c o") (lambda () (interactive) (find-file "~/jot/agenda.org")))
+(global-set-key (kbd "C-c o") (lambda () (interactive) (find-file "~/org/agenda.org")))
 
 (use-package org
   :defer t
@@ -656,7 +656,7 @@ folder, otherwise delete a word"
   (setq org-log-into-drawer t)
   (setq org-agenda-start-on-weekday 0)
   (setq org-agenda-files
-        '("~/jot/agenda.org"))
+        '("~/org/agenda.org"))
   (setq org-todo-keywords
         '((sequence "TODO(t)" "START(s)" "NEXT(n)" "|" "DONE(d!)")
           (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(r)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
@@ -744,7 +744,7 @@ folder, otherwise delete a word"
     (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
 
   ;; Increase the size of various headings
-  (set-face-attribute 'org-document-title nil :font "JetBrains Mono" :weight 'bold :height 1.0)
+  (set-face-attribute 'org-document-title nil :font "FiraCode Nerd Font" :weight 'bold :height 1.0)
   (dolist (face '((org-level-1 . 1.0)
                   (org-level-2 . 1.0)
                   (org-level-3 . 1.0)
@@ -796,7 +796,7 @@ folder, otherwise delete a word"
   ;; Searching
   (defun jd/search-org-files ()
     (interactive)
-    (counsel-rg "" "~/jot" nil "Search Notes: "))
+    (counsel-rg "" "~/org" nil "Search Notes: "))
 
   ;; Bindings
   (use-package evil-org
@@ -854,7 +854,7 @@ folder, otherwise delete a word"
 (use-package org-roam
   :straight t
   :custom
-  (org-roam-directory "~/jot/org")
+  (org-roam-directory "~/org")
   (org-roam-completion-everywhere t)
   (org-roam-capture-templates
    '(("d" "default" plain
@@ -872,7 +872,7 @@ folder, otherwise delete a word"
      ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
       :unnarrowed t)))
-  (org-roam-dailies-directory "~/jot/life/")
+  (org-roam-dailies-directory "~/org/daily/")
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "* %<%I:%M %p>: %?"
       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n\n"))))
@@ -893,7 +893,7 @@ folder, otherwise delete a word"
 ;; Deft
 (use-package deft
   :commands (deft)
-  :config (setq deft-directory "~/jot"
+  :config (setq deft-directory "~/org"
                 deft-recursive t
                 deft-extensions '("md" "org")))
 
