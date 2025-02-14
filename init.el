@@ -149,8 +149,8 @@
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; NOTE: Add comment (;;) below to use the fullscreen above
-(add-to-list 'default-frame-alist '(width  . 90))
-(add-to-list 'default-frame-alist '(height . 44))
+(add-to-list 'default-frame-alist '(width  . 164))
+(add-to-list 'default-frame-alist '(height . 54))
 
 
 ;; Enable line numbers and customize their format
@@ -195,7 +195,7 @@
 
 
 ;; FONT -----------------------
-(defvar jd/default-font-size 85)
+(defvar jd/default-font-size 90)
 (set-face-attribute 'default nil :font "FiraCode Nerd Font" :weight 'medium :height jd/default-font-size)
 (set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font" :weight 'medium :height jd/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
@@ -662,151 +662,120 @@ folder, otherwise delete a word"
           (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(r)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
   ;; Configure custom agenda views
-  (setq org-agenda-custom-commands
-   '(("d" "Dashboard"
-     ((agenda "" ((org-deadline-warning-days 7)))
-      (todo "TODO"
-        ((org-agenda-overriding-header "Not Started")))
-      (todo "NEXT"
-        ((org-agenda-overriding-header "Next Tasks")))
-      (todo "START" ((org-agenda-overriding-header "Work in Progress")))))
+(setq org-agenda-custom-commands
+   '(("i" "Inbox"
+     ((tags-todo "+@work"
+                 ((org-agenda-overriding-header "Tasks")
+                  (org-agenda-files '("~/org/agenda.org"
+                                      "~/org/work.org"))))
+      
+      (tags-todo "-{.*}"
+                 ((org-agenda-overriding-header "No Tags")
+                  (org-agenda-files '("~/org/inbox.org"))))))
 
-    ("n" "Next Tasks"
-     ((todo "NEXT"
-        ((org-agenda-overriding-header "Next Tasks")))))
+     ("d" "Daily"
+      ((agenda "" ((org-agenda-overriding-header "Today")
+                   (org-agenda-span 1)
+                   (org-deadline-warning-days 7)
+                   (org-agenda-file '("~/org/inbox.org"
+                                      "~/org/agenda.org"
+                                      "~/org/work.org"))))))))
 
-    ("W" "Work Tasks" tags-todo "+work-email")
+(setq org-modules
+      '(org-crypt
+        org-habit
+        org-bookmark))
 
-    ;; Low-effort next actions
-    ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-     ((org-agenda-overriding-header "Low Effort Tasks")
-      (org-agenda-max-todos 20)
-      (org-agenda-files org-agenda-files)))
+(setq org-refile-targets '((nil :maxlevel . 1)
+                           (org-agenda-files :maxlevel . 1)))
 
-    ("w" "Workflow Status"
-     ((todo "WAIT"
-            ((org-agenda-overriding-header "Waiting on External")
-             (org-agenda-files org-agenda-files)))
-      (todo "REVIEW"
-            ((org-agenda-overriding-header "In Review")
-             (org-agenda-files org-agenda-files)))
-      (todo "PLAN"
-            ((org-agenda-overriding-header "In Planning")
-             (org-agenda-todo-list-sublevels nil)
-             (org-agenda-files org-agenda-files)))
-      (todo "BACKLOG"
-            ((org-agenda-overriding-header "Project Backlog")
-             (org-agenda-todo-list-sublevels nil)
-             (org-agenda-files org-agenda-files)))
-      (todo "READY"
-            ((org-agenda-overriding-header "Ready for Work")
-             (org-agenda-files org-agenda-files)))
-      (todo "ACTIVE"
-            ((org-agenda-overriding-header "Active Projects")
-             (org-agenda-files org-agenda-files)))
-      (todo "COMPLETED"
-            ((org-agenda-overriding-header "Completed Projects")
-             (org-agenda-files org-agenda-files)))
-      (todo "CANC"
-            ((org-agenda-overriding-header "Cancelled Projects")
-             (org-agenda-files org-agenda-files)))))))
+(setq org-outline-path-complete-in-steps nil)
+(setq org-refile-use-outline-path t)
 
+(evil-define-key '(normal insert visual) org-mode-map (kbd "C-j") 'org-next-visible-heading)
+(evil-define-key '(normal insert visual) org-mode-map (kbd "C-k") 'org-previous-visible-heading)
 
-  (setq org-modules
-        '(org-crypt
-          org-habit
-          org-bookmark))
+(evil-define-key '(normal insert visual) org-mode-map (kbd "M-j") 'org-metadown)
+(evil-define-key '(normal insert visual) org-mode-map (kbd "M-k") 'org-metaup)
 
-  (setq org-refile-targets '((nil :maxlevel . 1)
-                             (org-agenda-files :maxlevel . 1)))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)))
 
-  (setq org-outline-path-complete-in-steps nil)
-  (setq org-refile-use-outline-path t)
+(push '("conf-unix" . conf-unix) org-src-lang-modes)
 
-  (evil-define-key '(normal insert visual) org-mode-map (kbd "C-j") 'org-next-visible-heading)
-  (evil-define-key '(normal insert visual) org-mode-map (kbd "C-k") 'org-previous-visible-heading)
+;; Fonts and Bullets
+;; (use-package org-superstar
+;;   :after org
+;;   :hook (org-mode . org-superstar-mode)
+;;   :custom
+;;   (org-superstar-remove-leading-stars t)
+;;   (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
 
-  (evil-define-key '(normal insert visual) org-mode-map (kbd "M-j") 'org-metadown)
-  (evil-define-key '(normal insert visual) org-mode-map (kbd "M-k") 'org-metaup)
+;; Increase the size of various headings
+(set-face-attribute 'org-document-title nil :font "FiraCode Nerd Font" :weight 'bold :height 1.0)
+(dolist (face '((org-level-1 . 1.0)
+                (org-level-2 . 1.0)
+                (org-level-3 . 1.0)
+                (org-level-4 . 1.0)
+                (org-level-5 . 1.0)
+                (org-level-6 . 1.0)
+                (org-level-7 . 1.0)
+                (org-level-8 . 1.0)))
+  (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'medium :height (cdr face)))
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)))
+;; Make sure org-indent face is available
+(require 'org-indent)
 
-  (push '("conf-unix" . conf-unix) org-src-lang-modes)
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
+(set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
-  ;; Fonts and Bullets
-  (use-package org-superstar
-    :after org
-    :hook (org-mode . org-superstar-mode)
-    :custom
-    (org-superstar-remove-leading-stars t)
-    (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
+;; Get rid of the background on column views
+(set-face-attribute 'org-column nil :background nil)
+(set-face-attribute 'org-column-title nil :background nil)
 
-  ;; Increase the size of various headings
-  (set-face-attribute 'org-document-title nil :font "FiraCode Nerd Font" :weight 'bold :height 1.0)
-  (dolist (face '((org-level-1 . 1.0)
-                  (org-level-2 . 1.0)
-                  (org-level-3 . 1.0)
-                  (org-level-4 . 1.0)
-                  (org-level-5 . 1.0)
-                  (org-level-6 . 1.0)
-                  (org-level-7 . 1.0)
-                  (org-level-8 . 1.0)))
-    (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'medium :height (cdr face)))
+;; TODO: Others to consider
+;; '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+;; '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+;; '(org-property-value ((t (:inherit fixed-pitch))) t)
+;; '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+;; '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+;; '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+;; '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
-  ;; Make sure org-indent face is available
-  (require 'org-indent)
+;; Block Templates
+;; This is needed as of Org 9.2
+(require 'org-tempo)
 
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+(add-to-list 'org-structure-template-alist '("src" . "src"))
+(add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+(add-to-list 'org-structure-template-alist '("py" . "src python"))
+(add-to-list 'org-structure-template-alist '("json" . "src json"))
 
-  ;; Get rid of the background on column views
-  (set-face-attribute 'org-column nil :background nil)
-  (set-face-attribute 'org-column-title nil :background nil)
+;; Searching
+(defun jd/search-org-files ()
+  (interactive)
+  (counsel-rg "" "~/org" nil "Search Notes: "))
 
-  ;; TODO: Others to consider
-  ;; '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-  ;; '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-  ;; '(org-property-value ((t (:inherit fixed-pitch))) t)
-  ;; '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-  ;; '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
-  ;; '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-  ;; '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
-
-  ;; Block Templates
-  ;; This is needed as of Org 9.2
-  (require 'org-tempo)
-
-  (add-to-list 'org-structure-template-alist '("src" . "src"))
-  (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
-  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
-  (add-to-list 'org-structure-template-alist '("py" . "src python"))
-  (add-to-list 'org-structure-template-alist '("json" . "src json"))
-
-  ;; Searching
-  (defun jd/search-org-files ()
-    (interactive)
-    (counsel-rg "" "~/org" nil "Search Notes: "))
-
-  ;; Bindings
-  (use-package evil-org
-    :after org
-    :hook ((org-mode . evil-org-mode)
-           (org-agenda-mode . evil-org-mode)
-           (evil-org-mode . (lambda () (evil-org-set-key-theme '(navigation todo insert textobjects additional)))))
-    :config
-    (require 'evil-org-agenda)
-    (evil-org-agenda-set-keys)))
+;; Bindings
+(use-package evil-org
+  :after org
+  :hook ((org-mode . evil-org-mode)
+         (org-agenda-mode . evil-org-mode)
+         (evil-org-mode . (lambda () (evil-org-set-key-theme '(navigation todo insert textobjects additional)))))
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys)))
 
 ;; PRESENTATIONS -----------------------
 
