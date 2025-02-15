@@ -195,7 +195,7 @@
 
 
 ;; FONT -----------------------
-(defvar jd/default-font-size 90)
+(defvar jd/default-font-size 95)
 (set-face-attribute 'default nil :font "FiraCode Nerd Font" :weight 'medium :height jd/default-font-size)
 (set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font" :weight 'medium :height jd/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
@@ -664,10 +664,11 @@ folder, otherwise delete a word"
   ;; Configure custom agenda views
 (setq org-agenda-custom-commands
    '(("i" "Inbox"
-     ((tags-todo "+@work"
+     ((tags-todo "+@task"
                  ((org-agenda-overriding-header "Tasks")
                   (org-agenda-files '("~/org/agenda.org"
-                                      "~/org/work.org"))))
+                                      "~/org/work.org"
+                                      "~/org/personal.org"))))
       
       (tags-todo "-{.*}"
                  ((org-agenda-overriding-header "No Tags")
