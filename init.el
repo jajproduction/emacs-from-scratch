@@ -130,6 +130,9 @@
 (set-fringe-mode 10) ; Give some breathing room
 (menu-bar-mode -1)   ; Disable the menu bar
 
+;; Disable wrapping
+(setq-default truncate-lines t)
+
 ;; Set up the visible bell
 (setq visible-bell t)
 
@@ -149,8 +152,8 @@
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; NOTE: Add comment (;;) below to use the fullscreen above
-(add-to-list 'default-frame-alist '(width  . 164))
-(add-to-list 'default-frame-alist '(height . 54))
+(add-to-list 'default-frame-alist '(width  . 100))
+(add-to-list 'default-frame-alist '(height . 56))
 
 
 ;; Enable line numbers and customize their format
@@ -634,7 +637,7 @@ folder, otherwise delete a word"
   (setq evil-auto-indent nil)
   (diminish org-indent-mode))
 
-(global-set-key (kbd "C-c o") (lambda () (interactive) (find-file "~/org/agenda.org")))
+(global-set-key (kbd "C-c o") (lambda () (interactive) (find-file "~/org/tasks/agenda.org")))
 
 (use-package org
   :defer t
@@ -656,7 +659,7 @@ folder, otherwise delete a word"
   (setq org-log-into-drawer t)
   (setq org-agenda-start-on-weekday 0)
   (setq org-agenda-files
-        '("~/org/agenda.org"))
+        '("~/org/tasks/agenda.org"))
   (setq org-todo-keywords
         '((sequence "TODO(t)" "START(s)" "NEXT(n)" "|" "DONE(d!)")
           (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(r)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
@@ -666,21 +669,24 @@ folder, otherwise delete a word"
    '(("i" "Inbox"
      ((tags-todo "+@task"
                  ((org-agenda-overriding-header "Tasks")
-                  (org-agenda-files '("~/org/agenda.org"
-                                      "~/org/work.org"
-                                      "~/org/personal.org"))))
+                  (org-agenda-files '("~/org/tasks/agenda.org"
+                                      "~/org/tasks/work.org"
+                                      "~/org/tasks/personal.org"))))
       
       (tags-todo "-{.*}"
                  ((org-agenda-overriding-header "No Tags")
-                  (org-agenda-files '("~/org/inbox.org"))))))
+                  (org-agenda-files '("~/org/tasks/inbox.org"
+                                      "~/org/tasks/agenda.org"
+                                      "~/org/tasks/work.org"
+                                      "~/org/tasks/personal.org"))))))
 
      ("d" "Daily"
       ((agenda "" ((org-agenda-overriding-header "Today")
                    (org-agenda-span 1)
                    (org-deadline-warning-days 7)
-                   (org-agenda-file '("~/org/inbox.org"
-                                      "~/org/agenda.org"
-                                      "~/org/work.org"))))))))
+                   (org-agenda-file '("~/org/tasks/inbox.org"
+                                      "~/org/tasks/agenda.org"
+                                      "~/org/tasks/work.org"))))))))
 
 (setq org-modules
       '(org-crypt
@@ -824,7 +830,7 @@ folder, otherwise delete a word"
 (use-package org-roam
   :straight t
   :custom
-  (org-roam-directory "~/org")
+  (org-roam-directory "~/org/archive/")
   (org-roam-completion-everywhere t)
   (org-roam-capture-templates
    '(("d" "default" plain
@@ -842,7 +848,7 @@ folder, otherwise delete a word"
      ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project")
       :unnarrowed t)))
-  (org-roam-dailies-directory "~/org/daily/")
+  (org-roam-dailies-directory "~/org/journal/")
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "* %<%I:%M %p>: %?"
       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n\n"))))
@@ -859,6 +865,15 @@ folder, otherwise delete a word"
   :config
   (require 'org-roam-dailies)
   (org-roam-db-autosync-enable))
+
+;; LSP
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+(use-package lsp-ui :commands lsp-ui-mode)
 
 ;; Deft
 (use-package deft
