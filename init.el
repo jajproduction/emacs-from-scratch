@@ -198,7 +198,7 @@
 
 
 ;; FONT -----------------------
-(defvar jd/default-font-size 95)
+(defvar jd/default-font-size 100)
 (set-face-attribute 'default nil :font "FiraCode Nerd Font" :weight 'medium :height jd/default-font-size)
 (set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font" :weight 'medium :height jd/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
