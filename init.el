@@ -638,6 +638,7 @@ folder, otherwise delete a word"
   (diminish org-indent-mode))
 
 (global-set-key (kbd "C-c o") (lambda () (interactive) (find-file "~/org/tasks/agenda.org")))
+(global-set-key (kbd "C-c w") (lambda () (interactive) (find-file "~/org/tasks/work.org")))
 
 (use-package org
   :defer t
@@ -659,7 +660,10 @@ folder, otherwise delete a word"
   (setq org-log-into-drawer t)
   (setq org-agenda-start-on-weekday 0)
   (setq org-agenda-files
-        '("~/org/tasks/agenda.org"))
+        (append
+        '("~/org/tasks/agenda.org"
+          "~/org/tasks/work.org")
+        (directory-files-recursively "~/org/journal/" "\\.org$")))
   (setq org-todo-keywords
         '((sequence "TODO(t)" "START(s)" "NEXT(n)" "|" "DONE(d!)")
           (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(r)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
