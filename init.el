@@ -199,9 +199,9 @@
 
 ;; FONT -----------------------
 (defvar jd/default-font-size 100)
-(set-face-attribute 'default nil :font "FiraCode Nerd Font" :weight 'medium :height jd/default-font-size)
-(set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font" :weight 'medium :height jd/default-font-size)
-(set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height jd/default-font-size)
+(set-face-attribute 'default nil :font "Agave Nerd Font" :weight 'medium :height jd/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "Agave Nerd Font" :weight 'medium :height jd/default-font-size)
+(set-face-attribute 'variable-pitch nil :font "Agave Nerd Font" :height jd/default-font-size)
 
 ;; Emojis in buffers
 (use-package emojify
@@ -638,6 +638,7 @@ folder, otherwise delete a word"
   (diminish org-indent-mode))
 
 (global-set-key (kbd "C-c o") (lambda () (interactive) (find-file "~/org/tasks/agenda.org")))
+(global-set-key (kbd "C-c w") (lambda () (interactive) (find-file "~/org/tasks/work.org")))
 
 (use-package org
   :defer t
@@ -659,34 +660,44 @@ folder, otherwise delete a word"
   (setq org-log-into-drawer t)
   (setq org-agenda-start-on-weekday 0)
   (setq org-agenda-files
-        '("~/org/tasks/agenda.org"))
+        (append
+        '("~/org/tasks/agenda.org"
+          "~/org/tasks/work.org")
+        (directory-files-recursively "~/org/journal/" "\\.org$")))
+
   (setq org-todo-keywords
         '((sequence "TODO(t)" "START(s)" "NEXT(n)" "|" "DONE(d!)")
           (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(r)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
-  ;; Configure custom agenda views
+;; Configure custom agenda views
 (setq org-agenda-custom-commands
-   '(("i" "Inbox"
-     ((tags-todo "+@task"
-                 ((org-agenda-overriding-header "Tasks")
-                  (org-agenda-files '("~/org/tasks/agenda.org"
-                                      "~/org/tasks/work.org"
-                                      "~/org/tasks/personal.org"))))
-      
-      (tags-todo "-{.*}"
-                 ((org-agenda-overriding-header "No Tags")
-                  (org-agenda-files '("~/org/tasks/inbox.org"
-                                      "~/org/tasks/agenda.org"
-                                      "~/org/tasks/work.org"
-                                      "~/org/tasks/personal.org"))))))
+      '(("i" "Inbox"
+         ((tags-todo "+@task"
+                     ((org-agenda-overriding-header "Tasks")
+                      (org-agenda-files '("~/org/tasks/agenda.org"
+                                          "~/org/tasks/work.org"
+                                          "~/org/tasks/personal.org"))))
+          (tags-todo "-{.*}"
+                     ((org-agenda-overriding-header "No Tags")
+                      (org-agenda-files '("~/org/tasks/inbox.org"
+                                          "~/org/tasks/agenda.org"
+                                          "~/org/tasks/work.org"
+                                          "~/org/tasks/personal.org"))))))
 
-     ("d" "Daily"
-      ((agenda "" ((org-agenda-overriding-header "Today")
-                   (org-agenda-span 1)
-                   (org-deadline-warning-days 7)
-                   (org-agenda-file '("~/org/tasks/inbox.org"
-                                      "~/org/tasks/agenda.org"
-                                      "~/org/tasks/work.org"))))))))
+        ("d" "Daily"
+         ((agenda "" ((org-agenda-overriding-header "Today")
+                      (org-agenda-span 1)
+                      (org-deadline-warning-days 7)
+                      (org-agenda-files '("~/org/tasks/inbox.org"
+                                          "~/org/tasks/agenda.org"
+                                          "~/org/tasks/work.org"))))))
+
+        ("t" "Tasks"
+         ((agenda "" ((org-agenda-span 1)
+                      (org-agenda-files (directory-files-recursively "~/org/journal/" "\\.org$"))))
+          (tags-todo "-SCHEDULED>=\"<today>\""
+                     ((org-agenda-overriding-header "Tasks")
+                      (org-agenda-files (directory-files-recursively "~/org/journal/" "\\.org$"))))))))
 
 (setq org-modules
       '(org-crypt
@@ -720,7 +731,7 @@ folder, otherwise delete a word"
 ;;   (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
 
 ;; Increase the size of various headings
-(set-face-attribute 'org-document-title nil :font "FiraCode Nerd Font" :weight 'bold :height 1.0)
+(set-face-attribute 'org-document-title nil :font "Agave Nerd Font" :weight 'bold :height 1.0)
 (dolist (face '((org-level-1 . 1.0)
                 (org-level-2 . 1.0)
                 (org-level-3 . 1.0)
@@ -729,7 +740,7 @@ folder, otherwise delete a word"
                 (org-level-6 . 1.0)
                 (org-level-7 . 1.0)
                 (org-level-8 . 1.0)))
-  (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'medium :height (cdr face)))
+  (set-face-attribute (car face) nil :font "Agave Nerd Font" :weight 'medium :height (cdr face)))
 
 ;; Make sure org-indent face is available
 (require 'org-indent)
