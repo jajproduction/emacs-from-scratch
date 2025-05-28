@@ -683,21 +683,19 @@ folder, otherwise delete a word"
                                           "~/org/tasks/agenda.org"
                                           "~/org/tasks/work.org"
                                           "~/org/tasks/personal.org"))))))
-
-        ("d" "Daily"
-         ((agenda "" ((org-agenda-overriding-header "Today")
-                      (org-agenda-span 1)
-                      (org-deadline-warning-days 7)
-                      (org-agenda-files '("~/org/tasks/inbox.org"
-                                          "~/org/tasks/agenda.org"
-                                          "~/org/tasks/work.org"))))))
-
-        ("t" "Tasks"
-         ((agenda "" ((org-agenda-span 1)
-                      (org-agenda-files (directory-files-recursively "~/org/journal/" "\\.org$"))))
+        ("d" "Daily" 
+         ((agenda "" 
+                  ((org-agenda-span 1) 
+                   (org-agenda-files 
+                     (append 
+                       (directory-files-recursively "~/org/journal/" "\\.org$") 
+                       (directory-files-recursively "~/org/tasks/" "\\.org$")))))
           (tags-todo "-SCHEDULED>=\"<today>\""
                      ((org-agenda-overriding-header "Tasks")
-                      (org-agenda-files (directory-files-recursively "~/org/journal/" "\\.org$"))))))))
+                      (org-agenda-files
+                        (append 
+                          (directory-files-recursively "~/org/journal/" "\\.org$")
+                          (directory-files-recursively "~/org/tasks/" "\\.org$")))))))))
 
 (setq org-modules
       '(org-crypt
